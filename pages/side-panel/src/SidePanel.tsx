@@ -1,26 +1,25 @@
 import '@src/SidePanel.css';
-import { t } from '@extension/i18n';
-import { PROJECT_URL_OBJECT, useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
-import { cn, ErrorDisplay, LoadingSpinner, ToggleButton } from '@extension/ui';
+import { withErrorBoundary, withSuspense } from '@extension/shared';
+import { ErrorDisplay, LoadingSpinner } from '@extension/ui';
 
 const SidePanel = () => {
-  const { isLight } = useStorage(exampleThemeStorage);
-  const logo = isLight ? 'side-panel/logo_vertical.svg' : 'side-panel/logo_vertical_dark.svg';
-
-  const goGithubSite = () => chrome.tabs.create(PROJECT_URL_OBJECT);
+  // The URL where your Next.js writeflow-chat app is running
+  // Default to localhost:3000 for development
+  const NEXT_APP_URL = import.meta.env?.CEB_NEXT_APP_URL || 'http://localhost:3000';
 
   return (
-    <div className={cn('App', isLight ? 'bg-slate-50' : 'bg-gray-800')}>
-      <header className={cn('App-header', isLight ? 'text-gray-900' : 'text-gray-100')}>
-        <button onClick={goGithubSite}>
-          <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
-        </button>
-        <p>
-          Edit <code>pages/side-panel/src/SidePanel.tsx</code>
-        </p>
-        <ToggleButton onClick={exampleThemeStorage.toggle}>{t('toggleTheme')}</ToggleButton>
-      </header>
+    <div style={{ width: '100%', height: '100vh', margin: 0, padding: 0, overflow: 'hidden' }}>
+      <iframe
+        src={NEXT_APP_URL}
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          display: 'block',
+        }}
+        title="WriteFlow Chat"
+        allow="clipboard-read; clipboard-write"
+      />
     </div>
   );
 };
